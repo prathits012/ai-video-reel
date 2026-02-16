@@ -6,11 +6,14 @@ Trims each clip to target duration and concatenates with MoviePy.
 from pathlib import Path
 
 from moviepy import VideoFileClip, concatenate_videoclips
+from moviepy.video.fx.Crop import Crop
+from moviepy.video.fx.Resize import Resize
 
 from src.scout import parse_script, Segment
 
 CLIPS_DIR = Path(__file__).resolve().parent.parent / "clips"
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "output"
+TARGET_SIZE = (1080, 1920)  # vertical reel: width x height
 
 
 def get_clips_in_order(clips_dir: Path) -> list[Path]:
@@ -26,6 +29,23 @@ def _segment_sort_key(p: Path) -> tuple[int, str]:
     if len(parts) >= 2 and parts[1].isdigit():
         return (int(parts[1]), name)
     return (999, name)
+
+
+def _resize_to_fill(clip: VideoFileClip) -> VideoFileClip:
+    """
+    Resize and center-crop clip to TARGET_SIZE so it fills the frame.
+    Prevents film reel effect, letterboxing, and scrolling from mismatched aspect ratios.
+    """
+    w, h = clip.size
+    tw, th = TARGET_SIZE
+    scale = max(tw / w, th / h)
+    new_w, new_h = int(w * scale), int(h * scale)
+    scaled = clip.with_effects([Resize(new_size=(new_w, new_h))])
+    x_center, y_center = new_w / 2, new_h / 2
+    cropped = scaled.with_effects([
+        Crop(x_center=x_center, y_center=y_center, width=tw, height=th)
+    ])
+    return cropped
 
 
 def director(
@@ -61,7 +81,8 @@ def director(
         source_clips.append(clip)
         duration = min(seg.duration_seconds, clip.duration)
         trimmed = clip.subclipped(0, duration)
-        trimmed_clips.append(trimmed)
+        normalized = _resize_to_fill(trimmed)
+        trimmed_clips.append(normalized)
 
     final = concatenate_videoclips(trimmed_clips, method="chain")
     out = output_path or output_dir / f"{script_path.stem}_draft.mp4"
