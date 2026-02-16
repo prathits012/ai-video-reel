@@ -1,0 +1,19 @@
+SEGMENT: Coffee brewing in the morning
+TEXT: A good day starts with a great cup of coffee.
+DURATION: 5
+---
+SEGMENT: Person typing on laptop
+TEXT: Small habits compound into big results over time.
+DURATION: 7
+---
+SEGMENT: Sunrise over mountains
+TEXT: The early hours are when magic happens.
+DURATION: 8
+---
+SEGMENT: Books on a shelf in a library
+TEXT: Never stop learning. Read something new every day.
+DURATION: 5
+---
+SEGMENT: Hand writing in a notebook
+TEXT: Writing by hand helps ideas stick.
+DURATION: 5

@@ -1,0 +1,11 @@
+SEGMENT: Morning sunlight streaming through a window  
+TEXT: A morning routine sets a positive tone for your day!  
+DURATION: 5 seconds  
+---  
+SEGMENT: Person doing yoga or stretching  
+TEXT: It boosts your energy and focus, making you more productive!  
+DURATION: 5 seconds  
+---  
+SEGMENT: Person enjoying a healthy breakfast  
+TEXT: Fuel your body with nutrition to kickstart your metabolism!  
+DURATION: 5 seconds
