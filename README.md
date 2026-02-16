@@ -57,7 +57,9 @@ python check_setup.py
 │   ├── script_writer.py  # AI script generation
 │   ├── scout.py          # Pexels search + download
 │   ├── director.py       # Assemble clips into draft video
-│   └── ...               # Text overlay, optional TTS
+│   ├── polish.py         # Text overlay + optional TTS voiceover
+│   ├── rate.py           # AI vision rating (for agent verification)
+│   └── iterate.py        # Polish → rate loop until pass
 └── check_setup.py       # Environment validation
 ```
 
@@ -90,6 +92,36 @@ python -m src.director scripts/sample.txt
 # Output: output/<script_stem>_draft.mp4
 ```
 
+### 4. Polish
+
+Add text overlay (and optional TTS voiceover):
+
+```bash
+python -m src.polish scripts/sample.txt
+# Output: output/<script_stem>_final.mp4
+
+# With voiceover:
+python -m src.polish scripts/sample.txt --voiceover
+```
+
+### 5. Rate (AI verification)
+
+Rate the video with AI vision. Saves a JSON the agent can read:
+
+```bash
+python -m src.rate output/benefits_of_morning_routine_final.mp4 scripts/benefits_of_morning_routine.txt
+# Output: output/<video_stem>_rating.json
+```
+
+### 6. Iterate (polish → rate loop)
+
+Run polish and rate until pass or max iterations:
+
+```bash
+python -m src.iterate scripts/benefits_of_morning_routine.txt
+# Options: -n 3 (max iterations), --min-score 8
+```
+
 ## Script Format
 
 ```
@@ -105,4 +137,4 @@ DURATION: <seconds>
 - [x] Phase 0: AI Script Writer
 - [x] Phase 2: Scout (Pexels search + download)
 - [x] Phase 3: Director (assemble clips)
-- [ ] Phase 4: Polish (text overlay + optional TTS)
+- [x] Phase 4: Polish (text overlay + optional TTS)

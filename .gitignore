@@ -20,6 +20,7 @@ clips/*.mp4
 clips/*.mov
 output/*.mp4
 output/*.mp3
+output/_tts_voiceover.mp3
 *.wav
 
 # IDE
