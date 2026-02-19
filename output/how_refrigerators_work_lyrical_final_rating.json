@@ -1,0 +1,24 @@
+{
+  "overall_score": 5,
+  "pass": false,
+  "scores": {
+    "text_readability": 5,
+    "visual_quality": 8,
+    "footage_relevance": 9,
+    "production_quality": 5,
+    "voiceover_caption_sync": 5
+  },
+  "issues": [
+    "segment 1 has text cut off at left edge",
+    "segment 2 has text cut off at left edge",
+    "segment 3 has text cut off at left edge",
+    "segment 4 has text cut off at left edge",
+    "segment 5 has text cut off at left edge",
+    "segment 6 has text cut off at left edge"
+  ],
+  "suggestions": [
+    "Ensure text is fully visible in every segment.",
+    "Adjust text size or positioning to prevent edge clipping.",
+    "Re-assess caption sync to match typical speaking pace."
+  ]
+}

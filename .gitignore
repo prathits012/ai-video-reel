@@ -16,6 +16,8 @@ dist/
 build/
 
 # Media & output
+assets/music/*.mp3
+assets/music/*.m4a
 clips/*.mp4
 clips/*.mov
 output/*.mp4

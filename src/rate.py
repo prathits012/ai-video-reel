@@ -44,7 +44,12 @@ def extract_frames(video_path: Path, script_path: Path, frames_dir: Path) -> lis
     return frame_paths
 
 
-def rate_video(video_path: Path, script_path: Path, output_path: Path | None = None) -> dict:
+def rate_video(
+    video_path: Path,
+    script_path: Path,
+    output_path: Path | None = None,
+    has_voiceover: bool = False,
+) -> dict:
     """
     Rate the video using AI vision. Returns structured dict with scores and feedback.
     """
@@ -76,6 +81,7 @@ Then rate on these criteria:
 2. **visual_quality** (1-10): Sharp, well-lit, good colors? Watch for GRAY/WASHED OUT clips.
 3. **footage_relevance** (1-10): Does footage match the segment topic?
 4. **production_quality** (1-10): Technical issues including TEXT CUT OFF, letterboxing, film reel effect.
+{f'5. **voiceover_caption_sync** (1-10): Video has voiceover. Does the caption text amount per segment seem appropriate for typical speaking pace? Flag if segments have too much text for their duration (voice would race ahead of caption) or vice versa. Add to issues if mismatch suspected.' if has_voiceover else ''}
 
 Respond with ONLY valid JSON (no markdown, no extra text):
 {{
@@ -86,6 +92,7 @@ Respond with ONLY valid JSON (no markdown, no extra text):
     "visual_quality": <1-10>,
     "footage_relevance": <1-10>,
     "production_quality": <1-10>
+    {', "voiceover_caption_sync": <1-10>' if has_voiceover else ''}
   }},
   "issues": ["list", "of", "specific", "problems", "e.g. segment 2 is gray/washed out", "segment 3 has film reel effect"],
   "suggestions": ["actionable", "improvements"]
@@ -124,6 +131,7 @@ def main() -> None:
     parser.add_argument("video", help="Path to video file")
     parser.add_argument("script", help="Path to script file")
     parser.add_argument("-o", "--output", help="Output JSON path")
+    parser.add_argument("--voiceover", action="store_true", help="Video has voiceover; rate caption sync")
     args = parser.parse_args()
 
     video_path = Path(args.video)
@@ -136,7 +144,7 @@ def main() -> None:
         return
 
     output_path = Path(args.output) if args.output else None
-    rating = rate_video(video_path, script_path, output_path)
+    rating = rate_video(video_path, script_path, output_path, has_voiceover=args.voiceover)
     out = output_path or OUTPUT_DIR / f"{video_path.stem}_rating.json"
 
     print(f"Rating saved to: {out}")

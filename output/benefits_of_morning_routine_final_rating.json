@@ -2,13 +2,13 @@
   "overall_score": 9,
   "pass": true,
   "scores": {
-    "text_readability": 10,
+    "text_readability": 9,
     "visual_quality": 9,
     "footage_relevance": 10,
     "production_quality": 9
   },
   "issues": [],
   "suggestions": [
-    "Ensure consistent lighting in all segments for even better visual quality."
+    "Consider slightly increasing text size for even better readability."
   ]
 }

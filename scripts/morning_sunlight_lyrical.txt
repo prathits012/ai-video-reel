@@ -1,0 +1,15 @@
+SEGMENT: Morning sunlight streaming through trees  
+LYRICS: Rise and shine, let the daylight in,  
+Nature's boost, it's where health begins.  
+DURATION: 5  
+---  
+SEGMENT: Person stretching or meditating outdoors  
+LYRICS: Stretch your limbs, feel the warmth on your skin,  
+Sunlight lifts you, let the day begin!  
+DURATION: 5  
+---  
+SEGMENT: Happy people enjoying a sunny day  
+LYRICS: Mood will soar, as you soak in the rays,  
+Vitamin D fuels our vibrant days!  
+DURATION: 5  
+---

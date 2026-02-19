@@ -1,0 +1,25 @@
+SEGMENT: Person meditating in a park  
+LYRICS: Close your eyes and take a breath,  
+Feel the peace, release the stress.  
+DURATION: 5  
+---  
+SEGMENT: Group meditation in a studio  
+LYRICS: Gather round, let worries fade,  
+In this calm, your fears are laid.  
+DURATION: 5  
+---  
+SEGMENT: Nature scenery with ocean waves  
+LYRICS: Focus in, let thoughts drift away,  
+Find your center, start your day.  
+DURATION: 5  
+---  
+SEGMENT: Person journaling after meditation  
+LYRICS: Clarity comes from the still,  
+Mindful moments help you heal.  
+DURATION: 5  
+---  
+SEGMENT: Happy people enjoying life  
+LYRICS: Joy and calm, they intertwine,  
+Meditation, feel divine!  
+DURATION: 5  
+---

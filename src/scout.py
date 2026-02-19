@@ -41,29 +41,56 @@ def parse_script(script_path: Path) -> list[Segment]:
         query = ""
         overlay_text = ""
         duration = 5  # default
-        for line in block.splitlines():
-            line = line.strip()
-            if line.upper().startswith("SEGMENT:"):
-                query = line.split(":", 1)[1].strip()
-            elif line.upper().startswith("TEXT:"):
-                overlay_text = line.split(":", 1)[1].strip().strip('"\'')
-            elif line.upper().startswith("DURATION:"):
-                raw = line.split(":", 1)[1].strip()
-                # Extract first number (handles "5", "5 seconds", "5s")
+        lines = block.splitlines()
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            stripped = line.strip()
+            if stripped.upper().startswith("SEGMENT:"):
+                query = stripped.split(":", 1)[1].strip()
+            elif stripped.upper().startswith("TEXT:"):
+                overlay_text = stripped.split(":", 1)[1].strip().strip('"\'')
+                i += 1
+                # Multi-line: append lines until next keyword
+                while i < len(lines) and not re.match(
+                    r"^\s*(SEGMENT|TEXT|LYRICS|DURATION)\s*:", lines[i], re.I
+                ):
+                    overlay_text += " " + lines[i].strip()
+                    i += 1
+                overlay_text = overlay_text.strip()
+                continue
+            elif stripped.upper().startswith("LYRICS:"):
+                overlay_text = stripped.split(":", 1)[1].strip().strip('"\'')
+                i += 1
+                while i < len(lines) and not re.match(
+                    r"^\s*(SEGMENT|TEXT|LYRICS|DURATION)\s*:", lines[i], re.I
+                ):
+                    overlay_text += " " + lines[i].strip()
+                    i += 1
+                overlay_text = overlay_text.strip()
+                continue
+            elif stripped.upper().startswith("DURATION:"):
+                raw = stripped.split(":", 1)[1].strip()
                 match = re.search(r"\d+", raw)
                 duration = int(match.group()) if match else 5
+            i += 1
         if query:
             segments.append(Segment(query=query, duration_seconds=duration, text=overlay_text))
 
     return segments
 
 
-def search_pexels(query: str, api_key: str, per_page: int = 5) -> dict:
+def search_pexels(
+    query: str, api_key: str, per_page: int = 5, min_duration: int | None = None
+) -> dict:
     """Search Pexels video API. Returns JSON response."""
+    params = {"query": query, "per_page": per_page}
+    if min_duration:
+        params["min_duration"] = min_duration
     resp = requests.get(
         PEXELS_API_URL,
         headers={"Authorization": api_key},
-        params={"query": query, "per_page": per_page},
+        params=params,
         timeout=30,
     )
     resp.raise_for_status()
@@ -100,11 +127,16 @@ def download_video(url: str, dest_path: Path) -> None:
             f.write(chunk)
 
 
-def scout(script_path: Path, output_dir: Path | None = None) -> list[tuple[Segment, Path]]:
+def scout(
+    script_path: Path,
+    output_dir: Path | None = None,
+    single_clip: bool = False,
+    min_duration: int | None = None,
+) -> list[tuple[Segment, Path]]:
     """
     Main Scout workflow:
     1. Parse script into segments
-    2. Search Pexels for each segment
+    2. Search Pexels for each segment (or one long clip if single_clip)
     3. Download best 1080p video to clips/
 
     Returns list of (Segment, local_file_path) for use by the Director.
@@ -118,6 +150,27 @@ def scout(script_path: Path, output_dir: Path | None = None) -> list[tuple[Segme
 
     segments = parse_script(script_path)
     results: list[tuple[Segment, Path]] = []
+
+    if single_clip:
+        total_dur = sum(s.duration_seconds for s in segments)
+        min_dur = min_duration if min_duration is not None else max(30, total_dur)
+        query = segments[0].query if segments else "ambient background"
+        data = search_pexels(query, api_key, per_page=5, min_duration=min_dur)
+        videos = data.get("videos", [])
+        if not videos:
+            data = search_pexels(query, api_key, per_page=5)
+            videos = data.get("videos", [])
+        if not videos:
+            raise RuntimeError(f"No Pexels results for query: {query}")
+        video_files = videos[0].get("video_files", [])
+        url = pick_best_video_file(video_files)
+        if not url:
+            raise RuntimeError(f"No downloadable file for query: {query}")
+        dest = out / "segment_00_single.mp4"
+        download_video(url, dest)
+        for seg in segments:
+            results.append((seg, dest))
+        return results
 
     for i, seg in enumerate(segments):
         data = search_pexels(seg.query, api_key)
@@ -153,6 +206,7 @@ def main() -> None:
         default=None,
         help="Output directory for clips (default: clips/<script_stem>/)",
     )
+    parser.add_argument("--single-clip", action="store_true", help="Fetch one long clip (30+ sec) for entire video")
     args = parser.parse_args()
 
     script_path = Path(args.script)
@@ -161,7 +215,7 @@ def main() -> None:
         return
 
     output_dir = Path(args.output) if args.output else None
-    results = scout(script_path, output_dir)
+    results = scout(script_path, output_dir=output_dir, single_clip=args.single_clip)
 
     print(f"Scout complete. Downloaded {len(results)} clips:")
     for seg, path in results:
