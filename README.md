@@ -59,11 +59,38 @@ python check_setup.py
 │   ├── director.py       # Assemble clips into draft video
 │   ├── polish.py         # Text overlay + optional TTS voiceover
 │   ├── rate.py           # AI vision rating (for agent verification)
-│   └── iterate.py        # Polish → rate loop until pass
+│   ├── iterate.py        # Polish → rate loop until pass
+│   └── music_fetcher.py  # Fetch royalty-free music from Pixabay
+├── assets/music/         # Cached music (from -m auto)
 └── check_setup.py       # Environment validation
 ```
 
-## Pipeline
+## One-command pipeline
+
+Generate a reel from a topic (or use an existing script):
+
+```bash
+python run.py "benefits of meditation"
+# From topic: generates script → scout → director → polish
+
+python run.py scripts/benefits_of_morning_routine.txt
+# From script: scout → director → polish
+
+# Song-like with voiceover + music:
+python run.py "benefits of meditation" --lyrical --voiceover -m path/to/music.mp3
+
+# Auto-fetch music from Pixabay (matches topic, min duration):
+python run.py "benefits of meditation" --lyrical --voiceover -m auto
+
+# With AI rating loop (polish until pass):
+python run.py "benefits of meditation" --iterate
+```
+
+Options: `--lyrical`, `--voiceover`, `-m/--music` (path or `auto`), `--iterate`, `--single-clip`, `-n` segments, `-d` duration
+
+---
+
+## Pipeline (step-by-step)
 
 ### 1. Script Writer (AI)
 
@@ -72,6 +99,9 @@ Generate a script from a topic:
 ```bash
 python -m src.script_writer "benefits of meditation"
 # Options: -n 5 (segments), -d 30 (total seconds), -o scripts/my_topic.txt
+
+# Song-like reels (rhymed lyrics, verse/chorus structure):
+python -m src.script_writer "benefits of meditation" --lyrical
 ```
 
 ### 2. Scout
@@ -94,14 +124,17 @@ python -m src.director scripts/sample.txt
 
 ### 4. Polish
 
-Add text overlay (and optional TTS voiceover):
+Add text overlay, optional TTS voiceover, and optional background music:
 
 ```bash
 python -m src.polish scripts/sample.txt
 # Output: output/<script_stem>_final.mp4
 
-# With voiceover:
+# With voiceover (TTS reads lyrics):
 python -m src.polish scripts/sample.txt --voiceover
+
+# Song-like: voiceover + background music (music at 25% volume):
+python -m src.polish scripts/sample.txt --voiceover -m path/to/music.mp3
 ```
 
 ### 5. Rate (AI verification)
@@ -119,7 +152,7 @@ Run polish and rate until pass or max iterations:
 
 ```bash
 python -m src.iterate scripts/benefits_of_morning_routine.txt
-# Options: -n 3 (max iterations), --min-score 8
+# Options: -n 3 (max iterations), --min-score 8, --voiceover, -m path/to/music.mp3
 ```
 
 ## Script Format
@@ -130,6 +163,12 @@ TEXT: <educational text to overlay on screen>
 DURATION: <seconds>
 ---
 ```
+
+For song-like reels, use `LYRICS:` instead of `TEXT:` (rhymed, metered lines).
+
+### Music (local)
+
+Place royalty-free `.mp3` files in `assets/music/` (e.g. calm.mp3, uplifting.mp3). Use `-m auto` to pick one, or `-m path/to/track.mp3` for a specific file. Pixabay API does not support audio; download manually from [Pexels Music](https://www.pexels.com/music/) or [Pixabay Music](https://pixabay.com/music/).
 
 ## Roadmap
 

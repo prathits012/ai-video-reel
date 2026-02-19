@@ -1,0 +1,29 @@
+SEGMENT: Refrigerator interior with food storage
+LYRICS: Open the door and feel that chill inside,
+Cool air flows in where all the good things hide.
+DURATION: 6
+---
+SEGMENT: Kitchen appliance or modern fridge
+LYRICS: A pump in the back works through the night,
+Pushing warmth out, keeping cold just right.
+DURATION: 6
+---
+SEGMENT: Metal coils or cooling fins close-up
+LYRICS: Heat escapes through coils that wind and bend,
+Outside it goes, so coolness can descend.
+DURATION: 6
+---
+SEGMENT: Ice or frost forming
+LYRICS: Inside the frost, the magic takes its turn,
+Liquid meets the air, the cold begins to earn.
+DURATION: 6
+---
+SEGMENT: Fresh vegetables in refrigerator
+LYRICS: Round and round the circle spins so true,
+Milk stays fresh and greens stay crisp for you.
+DURATION: 6
+---
+SEGMENT: Family opening refrigerator happily
+LYRICS: So next time you reach in for a bite,
+Thank the chill that keeps your snacks so right!
+DURATION: 6
