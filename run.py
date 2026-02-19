@@ -163,6 +163,7 @@ def run(
             music_path=music_path,
             music_volume=music_volume,
             max_iterations=max_iterations,
+            has_music=music_path is not None,
         )
         return OUTPUT_DIR / f"{script_path.stem}_final.mp4"
 
@@ -180,7 +181,12 @@ def run(
     # Optional: run AI rating once and save JSON
     if rate:
         print("Rate: AI rating...")
-        rating = rate_video(out, script_path, has_voiceover=voiceover)
+        rating = rate_video(
+            out,
+            script_path,
+            has_voiceover=voiceover,
+            has_music=music_path is not None,
+        )
         print(f"Rating: {rating['overall_score']}/10 | Pass: {rating['pass']}")
         if rating.get("issues"):
             print("Issues:", ", ".join(rating["issues"]))

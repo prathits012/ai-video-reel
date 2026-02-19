@@ -17,6 +17,7 @@ def iterate(
     voiceover: bool = False,
     music_path: Path | None = None,
     music_volume: float = 0.15,
+    has_music: bool = False,
 ) -> dict:
     """
     Run polish → rate until pass and no critical issues, or max iterations.
@@ -41,7 +42,12 @@ def iterate(
         print(f"Polish output: {out}")
 
         print("Running rate...")
-        rating = rate_video(out, script_path, has_voiceover=voiceover)
+        rating = rate_video(
+            out,
+            script_path,
+            has_voiceover=voiceover,
+            has_music=has_music or music_path is not None,
+        )
         print(f"Rating: {rating['overall_score']}/10 | Pass: {rating['pass']}")
         if rating.get("issues"):
             print("Issues:", ", ".join(rating["issues"]))
