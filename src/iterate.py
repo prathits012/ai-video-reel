@@ -6,6 +6,7 @@ from pathlib import Path
 
 from src.polish import polish
 from src.rate import rate_video
+from src.safety_rate import safety_check, print_safety_result
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "output"
 
@@ -55,10 +56,19 @@ def iterate(
             print("Suggestions:", ", ".join(rating["suggestions"]))
 
         if rating["pass"] and not rating.get("issues") and rating["overall_score"] >= min_score:
-            print("\n✓ Target met. Done.")
-            return rating
+            print("\n✓ Quality target met.")
+            break
 
-    print(f"\nStopped after {max_iterations} iterations.")
+    print("\nSafety: running content safety check on final output...")
+    safety = safety_check(out, script_path)
+    print_safety_result(safety)
+    if not safety["safe"]:
+        print(
+            f"\nWARNING: Safety verdict is '{safety['verdict']}'. "
+            "Review the safety report before publishing."
+        )
+
+    print(f"\nStopped after {i + 1} iteration(s).")
     return rating
 
 

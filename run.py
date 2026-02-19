@@ -22,6 +22,7 @@ from src.polish import polish
 from src.iterate import iterate
 from src.music_fetcher import pick_local_music
 from src.rate import rate_video
+from src.safety_rate import safety_check, print_safety_result
 from src.elevenlabs_client import generate_song
 
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
@@ -95,6 +96,16 @@ def run_hamilton(
         caption_first_line_only=True,
     )
     print(f"\n✓ Done: {out}")
+
+    print("\nSafety: running content safety check...")
+    safety = safety_check(out, script_path)
+    print_safety_result(safety)
+    if not safety["safe"]:
+        print(
+            f"\nWARNING: Safety verdict is '{safety['verdict']}'. "
+            "Review the safety report before publishing."
+        )
+
     return out
 
 
@@ -178,7 +189,17 @@ def run(
     )
     print(f"\n✓ Done: {out}")
 
-    # Optional: run AI rating once and save JSON
+    # Safety check always runs
+    print("\nSafety: running content safety check...")
+    safety = safety_check(out, script_path)
+    print_safety_result(safety)
+    if not safety["safe"]:
+        print(
+            f"\nWARNING: Safety verdict is '{safety['verdict']}'. "
+            "Review the safety report before publishing."
+        )
+
+    # Optional: run AI quality rating once and save JSON
     if rate:
         print("Rate: AI rating...")
         rating = rate_video(

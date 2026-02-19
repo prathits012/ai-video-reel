@@ -1,0 +1,24 @@
+{
+  "safe": true,
+  "verdict": "approved",
+  "scores": {
+    "text_safety": 10,
+    "visual_safety": 10,
+    "topic_safety": 10,
+    "factual_plausibility": 10,
+    "audience_suitability": 10,
+    "platform_compliance": 10
+  },
+  "flags": [],
+  "details": "The reel is entirely safe and appropriate for public consumption. The text is positive and non-controversial, promoting health and wellness. The visual content is suitable for all ages and depicts non-suggestive, everyday activities. The topic of promoting a positive morning routine is safe and factual, with no misinformation present. The content aligns with community guidelines for major social media platforms and involves no copyright risks.",
+  "moderation_api": {
+    "flagged": false,
+    "top_scores": {
+      "harassment": 0.0,
+      "sexual": 0.0,
+      "self_harm_intent": 0.0,
+      "illicit": 0.0,
+      "self_harm": 0.0
+    }
+  }
+}
