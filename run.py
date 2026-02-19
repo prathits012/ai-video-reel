@@ -93,7 +93,6 @@ def run_hamilton(
         script_path,
         draft_path=draft_path,
         music_audio_path=audio_path,
-        caption_first_line_only=True,
     )
     print(f"\n✓ Done: {out}")
 

@@ -17,8 +17,6 @@ from moviepy.audio.fx import MultiplyVolume
 from moviepy.video.fx.MultiplySpeed import MultiplySpeed
 from dotenv import load_dotenv
 
-from dataclasses import replace
-
 from src.scout import parse_script
 
 load_dotenv()
@@ -189,11 +187,11 @@ def polish(
     music_path: Path | None = None,
     music_volume: float = 0.15,
     music_audio_path: Path | None = None,
-    caption_first_line_only: bool = False,
 ) -> Path:
     """
     Add text overlay, optional TTS voiceover, optional background music, or generated music.
-    When music_audio_path is set, use it as primary audio (no TTS).
+    When music_audio_path is set, use it as primary audio (no TTS). Each segment's lyrics
+    are shown for its own duration, so captions advance in sync with the music timeline.
     """
     draft_path = draft_path or (OUTPUT_DIR / f"{script_path.stem}_draft.mp4")
     if not draft_path.exists():
@@ -207,16 +205,7 @@ def polish(
     video = VideoFileClip(str(draft_path))
     dur = video.duration
 
-    # For music single-segment: use video duration for segment, optionally first-line caption
-    if music_audio_path and segments:
-        seg = segments[0]
-        text = seg.text
-        if caption_first_line_only:
-            first_line = text.split("\n")[0].strip()
-            text = first_line if first_line else text
-        segments = [replace(seg, duration_seconds=int(dur), text=text)]
-
-    # Text overlay
+    # Text overlay — segments retain their individual durations and lyrics
     result = add_text_overlay(video, segments)
 
     # Build final audio
