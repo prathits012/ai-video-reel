@@ -1,17 +1,27 @@
 # AI Reels Bot
 
-Automatically generates short educational reels with text overlays by:
+Automatically generates short educational reels with text overlays. Two modes:
+
+**Standard mode** – multi-segment script with stock footage and optional voiceover:
 1. **AI generates the script** – Given a topic, creates SEGMENT/TEXT/DURATION format
 2. **Scout** – Searches Pexels for matching stock footage
 3. **Director** – Stitches clips together with MoviePy/FFmpeg
 4. **Polish** – Adds educational text overlay (and optional TTS voiceover)
+
+**Hamilton mode** – single-clip music video with ElevenLabs AI-generated song:
+1. **AI generates a flow script** – SEGMENT/LYRICS/DURATION format with rhymed lyrics
+2. **ElevenLabs Music API** – generates a full song (female voice, educational pop style)
+3. **Scout** – fetches one long Pexels clip
+4. **Director** – trims clip to song duration
+5. **Polish** – lays the ElevenLabs track over the video with caption
 
 ## Tech Stack
 
 - **Python 3.12+**
 - **MoviePy** – video editing
 - **Pexels API** – stock footage
-- **OpenAI** – script generation (GPT) + TTS voiceover
+- **OpenAI** – script generation (GPT) + optional TTS voiceover
+- **ElevenLabs** – AI music generation (Hamilton mode)
 
 ## Setup
 
@@ -38,8 +48,16 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env and add your Pexels + OpenAI API keys
+# Edit .env and add your API keys
 ```
+
+Required keys in `.env`:
+
+| Key | Required for |
+|-----|-------------|
+| `PEXELS_API_KEY` | All modes (stock footage) |
+| `OPENAI_API_KEY` | Script generation + optional TTS voiceover |
+| `ELEVENLABS_API_KEY` | Hamilton mode (AI music generation) |
 
 ### 5. Verify setup
 
@@ -50,22 +68,25 @@ python check_setup.py
 ## Project Structure
 
 ```
-├── scripts/         # Scripts (AI-generated or manual)
-├── clips/           # Downloaded Pexels footage
-├── output/          # Final rendered videos
-├── src/             # Source code
-│   ├── script_writer.py  # AI script generation
-│   ├── scout.py          # Pexels search + download
-│   ├── director.py       # Assemble clips into draft video
-│   ├── polish.py         # Text overlay + optional TTS voiceover
-│   ├── rate.py           # AI vision rating (for agent verification)
-│   ├── iterate.py        # Polish → rate loop until pass
-│   └── music_fetcher.py  # Fetch royalty-free music from Pixabay
+├── scripts/              # Scripts (AI-generated or manual)
+├── clips/                # Downloaded Pexels footage
+├── output/               # Final rendered videos
+├── src/                  # Source code
+│   ├── script_writer.py      # AI script generation (standard + flow/Hamilton)
+│   ├── scout.py              # Pexels search + download
+│   ├── director.py           # Assemble clips into draft video
+│   ├── polish.py             # Text overlay + optional TTS voiceover or music
+│   ├── elevenlabs_client.py  # ElevenLabs Music API (Hamilton mode)
+│   ├── rate.py               # AI vision rating (for agent verification)
+│   ├── iterate.py            # Polish → rate loop until pass
+│   └── music_fetcher.py      # Fetch royalty-free music from Pixabay
 ├── assets/music/         # Cached music (from -m auto)
-└── check_setup.py       # Environment validation
+└── check_setup.py        # Environment validation
 ```
 
 ## One-command pipeline
+
+### Standard mode
 
 Generate a reel from a topic (or use an existing script):
 
@@ -87,6 +108,20 @@ python run.py "benefits of meditation" --iterate
 ```
 
 Options: `--lyrical`, `--voiceover`, `-m/--music` (path or `auto`), `--iterate`, `--single-clip`, `-n` segments, `-d` duration
+
+### Hamilton mode (ElevenLabs AI music)
+
+Generates a full song from your topic lyrics using ElevenLabs Music API — female voice, clear educational pop style — and lays it over a single Pexels clip:
+
+```bash
+# From topic (auto-generates flow script + song):
+python run.py "how refrigerators work" --hamilton
+
+# From an existing flow script:
+python run.py scripts/how_refrigerators_work_lyrical.txt --hamilton
+```
+
+Requires `ELEVENLABS_API_KEY` in `.env`. Outputs to `output/<topic>_final.mp4`.
 
 ---
 
@@ -177,3 +212,4 @@ Place royalty-free `.mp3` files in `assets/music/` (e.g. calm.mp3, uplifting.mp3
 - [x] Phase 2: Scout (Pexels search + download)
 - [x] Phase 3: Director (assemble clips)
 - [x] Phase 4: Polish (text overlay + optional TTS)
+- [x] Phase 5: Hamilton mode – ElevenLabs AI music (female voice, educational pop)
