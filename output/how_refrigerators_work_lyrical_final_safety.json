@@ -1,0 +1,24 @@
+{
+  "safe": true,
+  "verdict": "approved",
+  "scores": {
+    "text_safety": 10,
+    "visual_safety": 10,
+    "topic_safety": 10,
+    "factual_plausibility": 10,
+    "audience_suitability": 10,
+    "platform_compliance": 10
+  },
+  "flags": [],
+  "details": "The reel is completely safe and appropriate for publication. The text contains no harmful language and is educational about refrigerator mechanics. Visuals are suitable for a general audience, free from inappropriate content, and demonstrate everyday objects and actions. The educational topic is safe and factual, discussing the basic principles of refrigeration. There are no issues with platform compliance as there are no visible logos or political content. The content is suitable for all ages, providing informative content about how refrigerators work without complex or controversial elements.",
+  "moderation_api": {
+    "flagged": false,
+    "top_scores": {
+      "sexual": 0.0,
+      "harassment": 0.0,
+      "violence": 0.0,
+      "violence_graphic": 0.0,
+      "self_harm_intent": 0.0
+    }
+  }
+}
