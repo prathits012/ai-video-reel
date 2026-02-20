@@ -1,0 +1,25 @@
+SEGMENT: "Animated circuit diagram"  
+LYRICS: In wires, electrons dance and flow,  
+Electric current, watch it go!  
+DURATION: 6  
+---  
+SEGMENT: "Light bulb turning on"  
+LYRICS: From power plants, the energy's sent,  
+To light our homes, where time is spent.  
+DURATION: 6  
+---  
+SEGMENT: "People using devices"  
+LYRICS: From phones to fridges, we all rely,  
+On electricity to amplify.  
+DURATION: 6  
+---  
+SEGMENT: "Wind turbines and solar panels"  
+LYRICS: Wind and sun, they help us create,  
+Clean energy, it’s never too late!  
+DURATION: 6  
+---  
+SEGMENT: "Children learning about electricity"  
+LYRICS: So next time you flip a switch, you’ll see,  
+Electricity’s magic, wild and free!  
+DURATION: 6  
+---
