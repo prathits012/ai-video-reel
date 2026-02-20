@@ -50,11 +50,11 @@ def run_hamilton(
         print(f"Using script: {script_path}")
     else:
         script_path = SCRIPTS_DIR / f"{_slugify(topic_or_script)}.txt"
-        print(f"Generating flow script for: {topic_or_script}")
+        print(f"Generating lyrical script for: {topic_or_script}")
         write_script(
             topic_or_script,
             output_path=script_path,
-            flow=True,
+            lyrical=True,
             total_duration=duration,
         )
         print(f"Script written: {script_path}\n")

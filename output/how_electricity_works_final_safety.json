@@ -1,0 +1,24 @@
+{
+  "safe": true,
+  "verdict": "approved",
+  "scores": {
+    "text_safety": 10,
+    "visual_safety": 10,
+    "topic_safety": 10,
+    "factual_plausibility": 10,
+    "audience_suitability": 10,
+    "platform_compliance": 10
+  },
+  "flags": [],
+  "details": "The reel is completely safe and appropriate for public publication. The text is educational, free of harmful or inappropriate content, and encourages learning about electricity and clean energy. Visuals are non-violent and appropriate for all ages. The topic of electricity, including renewable resources, is legitimate and presents no safety or misinformation concerns. The content aligns with community guidelines across platforms.",
+  "moderation_api": {
+    "flagged": false,
+    "top_scores": {
+      "harassment": 0.0,
+      "illicit": 0.0,
+      "hate": 0.0,
+      "violence": 0.0,
+      "self_harm_intent": 0.0
+    }
+  }
+}
