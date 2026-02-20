@@ -65,50 +65,67 @@ def add_text_overlay(
     font: str | None = None,
 ) -> CompositeVideoClip:
     """
-    Composite text overlays in Instagram Reels style:
-    - Bold font, white text
-    - Dark semi-transparent bar behind text
-    - Centered, lower-third position
+    Composite text overlays with tight black background behind each line of text.
+    Background hugs only the text — no full-width bar.
     """
     font = font or _find_font()
     text_clips = []
     t = 0.0
 
-    # Instagram-style: bold font, sized to stay well within frame
-    font_size = min(72, max(44, video.w // 16))
-    # Aggressive margins - 15% buffer each side to prevent cutoff on any segment
-    h_margin = int(video.w * 0.15)
-    v_margin = int(video.h * 0.035)
-    bar_padding = (h_margin, v_margin)
-    content_width = video.w - 2 * h_margin
+    font_size = min(64, max(40, video.w // 18))
+    # Small padding: just enough to breathe around each line
+    tight_pad = (14, 7)
+    # Max line width so no line runs edge to edge
+    max_line_chars = 22
 
     for seg in segments:
         if not seg.text:
             t += seg.duration_seconds
             continue
 
-        wrapped = _wrap_text_at_words(seg.text)
-        txt = TextClip(
-            text=wrapped,
-            font=font,
-            font_size=font_size,
-            color="white",
-            stroke_color=None,
-            stroke_width=0,
-            bg_color=(30, 30, 30),
-            method="label",
-            size=(content_width, None),
-            text_align="center",
-            margin=bar_padding,
-            duration=seg.duration_seconds,
-        )
-        # Lower third: center horizontally, bottom 25% of frame
-        txt = (
-            txt.with_position(("center", 0.68), relative=True)
-            .with_start(t)
-            .with_layer_index(1)
-        )
-        text_clips.append(txt)
+        # Render one TextClip per line so each line gets its own tight background box
+        lines = _wrap_text_at_words(seg.text, max_chars=max_line_chars).split("\n")
+        line_clips = []
+        for line in lines:
+            if not line.strip():
+                continue
+            line_clip = TextClip(
+                text=line,
+                font=font,
+                font_size=font_size,
+                color="white",
+                stroke_color=None,
+                stroke_width=0,
+                bg_color=(15, 15, 15),
+                method="label",
+                size=(None, None),      # shrink-wrap to text width
+                text_align="center",
+                margin=tight_pad,
+                duration=seg.duration_seconds,
+            )
+            line_clips.append(line_clip)
+
+        if not line_clips:
+            t += seg.duration_seconds
+            continue
+
+        # Stack lines vertically, each centered, spaced 6px apart
+        line_h = line_clips[0].size[1]
+        gap = 6
+        total_h = len(line_clips) * line_h + (len(line_clips) - 1) * gap
+        # Vertical anchor: lower third of frame (68% down)
+        anchor_y = int(video.h * 0.68)
+
+        for i, lc in enumerate(line_clips):
+            y = anchor_y + i * (line_h + gap) - total_h // 2
+            x = (video.w - lc.size[0]) // 2      # horizontally centered
+            positioned = (
+                lc.with_position((x, y))
+                .with_start(t)
+                .with_layer_index(1)
+            )
+            text_clips.append(positioned)
+
         t += seg.duration_seconds
 
     if not text_clips:
