@@ -18,12 +18,15 @@ build/
 # Media & output
 assets/music/*.mp3
 assets/music/*.m4a
-clips/*.mp4
-clips/*.mov
+clips/
 output/*.mp4
 output/*.mp3
+output/*.json
 output/_tts_voiceover.mp3
 *.wav
+
+# Auto-generated scripts
+scripts/*.txt
 
 # IDE
 .idea/
