@@ -60,9 +60,9 @@ def generate_script(
     Generate an educational reel script for the given topic.
     Returns the script as a string in SEGMENT/TEXT/DURATION (or LYRICS) format.
     """
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     if not os.getenv("OPENAI_API_KEY"):
         raise ValueError("OPENAI_API_KEY not set in .env")
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     if flow:
         prompt = f"""You are a musical producer writing Hamilton-style educational rap lyrics.

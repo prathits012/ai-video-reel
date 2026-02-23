@@ -39,14 +39,17 @@ OUTPUT_DIR = Path(__file__).resolve().parent.parent / "output"
 SAFETY_FRAMES_PER_SEGMENT = 2
 SAFETY_MAX_FRAMES = 12
 
-# Hard moderation categories that instantly trigger "rejected"
+# Hard moderation categories that instantly trigger "rejected".
+# These are the Python attribute names from the OpenAI Moderation API Categories object
+# (underscores, not slashes or hyphens used in the API docs).
 HARD_FLAG_CATEGORIES = {
     "sexual",
-    "sexual/minors",
-    "violence/graphic",
-    "hate/threatening",
-    "self-harm/intent",
-    "self-harm/instructions",
+    "sexual_minors",
+    "violence_graphic",
+    "hate_threatening",
+    "self_harm",
+    "self_harm_intent",
+    "self_harm_instructions",
 }
 
 
@@ -76,7 +79,7 @@ def _run_text_moderation(client: OpenAI, texts: list[str]) -> dict:
                 if score is not None:
                     all_scores[cat] = max(all_scores.get(cat, 0.0), float(score))
             for cat, triggered in result.categories.__dict__.items():
-                if triggered and cat.replace("_", "/") in HARD_FLAG_CATEGORIES:
+                if triggered and cat in HARD_FLAG_CATEGORIES:
                     hard_flags.append(cat)
 
     return {
@@ -98,9 +101,9 @@ def safety_check(
       safe (bool), verdict (str), scores (dict), flags (list), details (str)
     Saves result to output/<video_stem>_safety.json.
     """
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     if not os.getenv("OPENAI_API_KEY"):
         raise ValueError("OPENAI_API_KEY not set in .env")
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     segments = parse_script(script_path)
     script_text = script_path.read_text()

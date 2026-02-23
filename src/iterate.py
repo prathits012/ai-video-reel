@@ -30,8 +30,11 @@ def iterate(
         raise FileNotFoundError(f"Draft not found: {draft_path}. Run Director first.")
 
     rating = None
+    out = OUTPUT_DIR / f"{script_path.stem}_final.mp4"
+    iterations_run = 0
     for i in range(max_iterations):
-        print(f"\n--- Iteration {i + 1}/{max_iterations} ---")
+        iterations_run = i + 1
+        print(f"\n--- Iteration {iterations_run}/{max_iterations} ---")
         print("Running polish...")
         out = polish(
             script_path,
@@ -68,7 +71,7 @@ def iterate(
             "Review the safety report before publishing."
         )
 
-    print(f"\nStopped after {i + 1} iteration(s).")
+    print(f"\nStopped after {iterations_run} iteration(s).")
     return rating
 
 

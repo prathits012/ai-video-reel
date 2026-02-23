@@ -272,8 +272,11 @@ def pick_best_video_file(video_files: list[dict]) -> str | None:
         return (is_1080, width * height)
 
     sorted_files = sorted(video_files, key=score, reverse=True)
-    link = sorted_files[0].get("link")
-    return link if link else None
+    for f in sorted_files:
+        link = f.get("link")
+        if link:
+            return link
+    return None
 
 
 def download_video(url: str, dest_path: Path) -> None:

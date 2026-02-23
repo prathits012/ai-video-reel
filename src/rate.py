@@ -86,9 +86,9 @@ def rate_video(
     thorough evaluation of text overlays, footage quality, and temporal consistency.
     Returns structured dict with scores and feedback.
     """
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     if not os.getenv("OPENAI_API_KEY"):
         raise ValueError("OPENAI_API_KEY not set in .env")
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     segments = parse_script(script_path)
     script_text = script_path.read_text()
