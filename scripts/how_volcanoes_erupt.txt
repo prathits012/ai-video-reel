@@ -1,0 +1,15 @@
+SEGMENT: "Volcanic eruption footage"  
+TEXT: "Volcanoes erupt when pressure builds in magma chambers!"  
+DURATION: 6  
+---  
+SEGMENT: "Lava flowing down a hill"  
+TEXT: "Magma rises through cracks, becoming lava as it erupts."  
+DURATION: 6  
+---  
+SEGMENT: "Ash cloud rising into the sky"  
+TEXT: "Eruptions can release clouds of ash and gas high into the atmosphere."  
+DURATION: 6  
+---  
+SEGMENT: "Map of tectonic plates"  
+TEXT: "Most eruptions occur along tectonic plate boundaries!"  
+DURATION: 6

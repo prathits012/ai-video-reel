@@ -1,0 +1,24 @@
+{
+  "safe": true,
+  "verdict": "approved",
+  "scores": {
+    "text_safety": 10,
+    "visual_safety": 10,
+    "topic_safety": 10,
+    "factual_plausibility": 10,
+    "audience_suitability": 10,
+    "platform_compliance": 10
+  },
+  "flags": [],
+  "details": "The reel is safe and appropriate for publishing. The content is educational, focusing on volcanoes, and all text is factual and free from harmful language. The visuals, while depicting natural events like lava flow and ash release, are not graphic or disturbing. The topic is appropriate for general audiences, including minors, and complies with platform community guidelines.",
+  "moderation_api": {
+    "flagged": false,
+    "top_scores": {
+      "harassment": 0.0,
+      "violence_graphic": 0.0,
+      "violence": 0.0,
+      "sexual": 0.0,
+      "illicit_violent": 0.0
+    }
+  }
+}
