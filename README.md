@@ -60,7 +60,13 @@ Required keys in `.env`:
 | `OPENAI_API_KEY` | Script generation + optional TTS voiceover |
 | `ELEVENLABS_API_KEY` | Hamilton mode (AI music generation) |
 
-### 5. Verify setup
+### 5. Install frontend dependencies (web app only)
+
+```bash
+cd web && npm install && cd ..
+```
+
+### 6. Verify setup
 
 ```bash
 python check_setup.py
@@ -86,7 +92,27 @@ python check_setup.py
 └── check_setup.py        # Environment validation
 ```
 
-## One-command pipeline
+## Web App (local)
+
+Run the full pipeline through a browser UI — dark themed, modern, no cloud required.
+
+**Terminal 1 — API backend:**
+```bash
+source venv/bin/activate
+uvicorn api.main:app --reload --port 8000
+```
+
+**Terminal 2 — Frontend:**
+```bash
+cd web
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). Enter a topic, choose Standard or Hamilton mode, and click Generate. The result page polls for progress and shows a video player when done.
+
+---
+
+## One-command pipeline (CLI)
 
 ### Standard mode
 
